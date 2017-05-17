@@ -5,7 +5,7 @@ SAVE_DIR=$(pwd)
 RM_DATAWORK="rm -R ./datawork"
 RM_LOG="rm -R ./log"
 
-BIN="../../../OpenUxAS/build/uxas"
+BIN="../../../../OpenUxAS/build/uxas"
 
 mkdir -p RUNDIR_Escort
 cd RUNDIR_Escort
