@@ -11,4 +11,4 @@ mkdir -p RUNDIR_GroundInspectRoute
 cd RUNDIR_GroundInspectRoute
 $RM_DATAWORK
 $RM_LOG
-$BIN -cfgPath ../cfg_GroundInspectRoute.xml
+$BIN -cfgPath ../cfg_GroundInspectRoute.xml -runUntil 5

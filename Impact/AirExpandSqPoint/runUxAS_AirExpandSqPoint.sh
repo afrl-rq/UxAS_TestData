@@ -11,4 +11,4 @@ mkdir -p RUNDIR_AirExpandSqPoint
 cd RUNDIR_AirExpandSqPoint
 $RM_DATAWORK
 $RM_LOG
-$BIN -cfgPath ../cfg_AirExpandSqPoint.xml
+$BIN -cfgPath ../cfg_AirExpandSqPoint.xml -runUntil 5

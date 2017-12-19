@@ -11,4 +11,4 @@ mkdir -p RUNDIR_AirInspectPoint
 cd RUNDIR_AirInspectPoint
 $RM_DATAWORK
 $RM_LOG
-$BIN -cfgPath ../cfg_AirInspectPoint.xml
+$BIN -cfgPath ../cfg_AirInspectPoint.xml -runUntil 5
