@@ -8,7 +8,7 @@ class ItemListModel(QAbstractListModel):
         """ datain: a list where each item is a row
         """
         QAbstractListModel.__init__(self, parent, *args)
-        self.listData = datain #from here on out, listData holds all the data that was used to instantiate this class
+        self.listData = datain # listData holds all the data that was used to instantiate this class
 
 
     def rowCount(self, parent=QModelIndex()):
@@ -81,18 +81,34 @@ class TestExplorer(QDialog):
     ######################################################################
 
     def selectAllButton_Clicked(self):
+        """Selects all tests in the view
+        """
         self.lv.selectAll()
 
     def runButton_Clicked(self):
+        """Runs the selected tests in the view
+        """
         indices = self.lv.selectedIndexes()
 
         if not indices:
             return
 
-        selectedTests = [self.lm.listData[index.row()] for index in indices if (self.lm.listData[index.row()].isValidTest())]
+        validTests = [self.lm.listData[index.row()] for index in indices if (self.lm.listData[index.row()].isValidTest())]
 
-        self.statusView = StatusView(selectedTests) # Y U NO WORK?!
+        #show warning box if the selected tests are not valid
+        if not validTests:
+            warningBox = QMessageBox()
+            warningBox.setIcon(QMessageBox.Warning)
+            warningBox.setWindowTitle("Warning")
+            warningBox.setText("Warning!")
+            warningBox.setInformativeText("The selected tests are not valid. Check if they have an accepted database and a test script.")
+            warningBox.exec_()
+            return
+
+        self.statusView = StatusView(validTests)
         self.statusView.exec_()
 
     def cancelButton_Clicked(self):
+        """Closes the view
+        """
         self.close()
