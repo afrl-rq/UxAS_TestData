@@ -1,11 +1,9 @@
-#all this stuff was imported to test modules in the main. Some modules are not necessary anymore
 from Views.testExplorer import TestExplorer  # the test explorer
 from Model.test import Test  # the test class (used to initialize the test explorer)
 from PyQt5.QtWidgets import *  # this module contains classes that provide a set of UI elements to create classic desktop-style user interfaces
 import sys
 import os  # allows os functionality (Most importantly folder-file traversal)
 
-#this function will execute when this script is run as the main :)
 def main():
     tests = getTestsRelativeToCurrentDirectory(r"..\Impact") #generate tests based on impact folder
     app = QApplication(sys.argv) #create instance of Q application. Should only have one even if you have multiple windows

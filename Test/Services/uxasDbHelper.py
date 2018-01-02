@@ -5,7 +5,7 @@ class UxASDbHelper():
     def getDescriptorAndCounts(dbPath):
         """Returns the descriptor and counts for each type of message sent with UxAS.
         :param dbPath: A string representation of the fully qualified path to the sqlite database
-        """
+        """""
         query = "SELECT descriptor, count(*) AS count FROM msg GROUP BY descriptor"
         conn = sqlite3.connect(dbPath)
         c = conn.cursor()

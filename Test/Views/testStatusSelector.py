@@ -1,8 +1,3 @@
-#this is the test status selector.
-# 1. set label to Test Status
-# 2. create a QListView with the tests passed during initialization
-# 3. create a QWebEngineView using the .toHtml method in the test class
-
 import os
 
 from PyQt5.QtCore import *
@@ -15,7 +10,7 @@ from Model.Enums.testStatus import TestStatus
 class StatusView(QDialog):
     def __init__(self, tests):
         QDialog.__init__(self)  # call constructor of parent class
-        self.tests = tests # hang on to those tests. They're needed to run the selected tests
+        self.tests = tests  # hang on to those tests. They're needed to run the selected tests
         self.testIterator = 0
         # set the layout
         layout = QHBoxLayout()  # put everything in the layout in a grid
@@ -34,13 +29,12 @@ class StatusView(QDialog):
         #setup the web engine view
         self.webView = QWebEngineView()
         self.webView.setHtml("<h1>Executing Test(s)...</h1>")
+
         #try resizing the webView... Not sure why this doesnt work
         self.webView.resize(100,100)
 
-
-        #ADD A TIMER TO UPDATE THE LISTVIEW's ITEMS EVERY 5 SECONDS
         self.checkThreadTimer = QTimer(self)
-        self.checkThreadTimer.setInterval(500) #interval to run the tests, then check if they passed
+        self.checkThreadTimer.setInterval(500)  #interval to run the tests, then check if they passed
         self.checkThreadTimer.timeout.connect(self.runTests)
         self.checkThreadTimer.setSingleShot(True)
 
@@ -59,21 +53,26 @@ class StatusView(QDialog):
     ######################################################################
 
     def closeEvent(self, QCloseEvent):
+        """Called When the window is closed. This clears out the console/terminal.
+        :param QCloseEvent: the close event for the window
+        :return: Void
+        """
         os.system('cls' if os.name =='nt' else 'clear')
         for test in self.tests:
             test.status = TestStatus.Pending
 
     def selectedTestChanged(self):
+        """Called when the selected test is changed.
+        :return: Void
+        """
         selectedIndex = self.listView.selectedIndexes()[0]
         selectedTestHtml = self.listModel.listData[selectedIndex.row()].toHtml()
         self.webView.setHtml(selectedTestHtml)
 
     def runTests(self):
-        """
-        Runs the next test based on the testIterator
+        """Runs the next test based on the testIterator
         :return: Void
         """
-        #self.checkThreadTimer.stop()
         self.tests[self.testIterator].run()
 
         self.testIterator = self.testIterator + 1
@@ -88,7 +87,9 @@ class StatusView(QDialog):
         self.checkThreadTimer.start()
 
     def checkTests(self):
-        #self.checkThreadTimer.stop()
+        """Checks the status of the tests that have executed
+        :return: Void
+        """
         self.webView.setHtml("<h1>Verifying Test(s)...</h1>")
         self.listView.update()
 
@@ -111,7 +112,7 @@ class ItemListModel(QAbstractListModel):
         """ datain: a list where each item is a row
         """
         QAbstractListModel.__init__(self, parent, *args)
-        self.listData = datain #from here on out, listData holds all the data that was used to instantiate this class
+        self.listData = datain
 
     def rowCount(self, parent=QModelIndex()):
         return len(self.listData)
