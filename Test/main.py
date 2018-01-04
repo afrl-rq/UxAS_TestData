@@ -2,14 +2,14 @@ from Views.testExplorer import TestExplorer  # the test explorer
 from Model.test import Test  # the test class (used to initialize the test explorer)
 from PyQt5.QtWidgets import *  # this module contains classes that provide a set of UI elements to create classic desktop-style user interfaces
 import sys
-import os  # allows os functionality (Most importantly folder-file traversal)
+import os
 
 def main():
-    tests = getTestsRelativeToCurrentDirectory(r"..\Impact") #generate tests based on impact folder
-    app = QApplication(sys.argv) #create instance of Q application. Should only have one even if you have multiple windows
-    testExplorer = TestExplorer(tests) #instantiate a test explorer
-    testExplorer.show() #show the test explorer
-    app.exec_() #execute the application
+    tests = getTestsRelativeToCurrentDirectory(r"..\Impact") #  generate tests based on impact folder
+    app = QApplication(sys.argv) #  create instance of Q application. Should only have one even if you have multiple windows
+    testExplorer = TestExplorer(tests) #  generate the test explorer with the tests
+    testExplorer.show() #  show the test explorer
+    app.exec_() #  execute the application
 
 def getTestsRelativeToCurrentDirectory(relativePathString):
     currentDir = os.getcwd()

@@ -2,7 +2,7 @@
 
 This application was developed to execute UxAS scenarios and quickly compare the generated messages to a set of messages that are understood to be the acceptable output. At this stage in development, this application compares the types of messages that are output, and the amount of times those messages are logged with the message logger data service to the UxAS message database. This application runs the scenarios in the Impact folder.
 
-The following must be downloaded in order to run the message comparison application.
+The following must be downloaded in order to run the message comparison application:
 
 * [Python & pip](https://www.python.org/ftp/python/3.6.1/python-3.6.1.exe)
 * PyQt5
@@ -10,7 +10,7 @@ The following must be downloaded in order to run the message comparison applicat
 * A working version of [OpenUxAS](https://github.com/afrl-rq/OpenUxAS)
 * [Git Bash](https://git-scm.com/download/win) (for Windows users)
 
-To start the application, execute the runTestsMain.py script.
+To start the application, execute the main.py script. Since we are working with PyQt5, this is must be executed with the 32-bit version of Python.
 
 #### Adding Tests ####
 
