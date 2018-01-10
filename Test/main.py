@@ -3,9 +3,23 @@ from Model.test import Test  # the test class (used to initialize the test explo
 from PyQt5.QtWidgets import *  # this module contains classes that provide a set of UI elements to create classic desktop-style user interfaces
 import sys
 import os
+import getopt
 
 def main():
     tests = getTestsRelativeToCurrentDirectory(r"..\Impact") #  generate tests based on impact folder
+
+    try:
+        opts, args = getopt.getopt(sys.argv[1:], "a", ["runall"])
+    except getopt.GetoptError:
+        print('Could not create command line arguments')
+        sys.exit(2)
+
+    for opt, arg in opts:
+        if opt in ("-a", "--runall"):
+            [test.run() for test in tests]
+            [test.assertMatchingCounts() for test in tests]
+            return
+
     app = QApplication(sys.argv) #  create instance of Q application. Should only have one even if you have multiple windows
     testExplorer = TestExplorer(tests) #  generate the test explorer with the tests
     testExplorer.show() #  show the test explorer

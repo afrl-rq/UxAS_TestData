@@ -56,7 +56,12 @@ class Test():
          Updates the status of the test
         :return: Void
         """
+        if not (self.isValidTest()):
+            return
+
         self.updateGeneratedDbPath()
+        if (self.testDbPath == ""):
+            return
         truthDescriptorAndCounts = UxASDbHelper.getDescriptorAndCounts(self.acceptedDbPath)
         testDescriptorAndCounts = UxASDbHelper.getDescriptorAndCounts(self.testDbPath)
         testData = UxASDbHelper.compareDescriptorAndCounts(truthDescriptorAndCounts, testDescriptorAndCounts, self.name)
@@ -86,6 +91,7 @@ class Test():
         """
         #get the location of the generatedDb
         testDirData = FileHelper.searchForSubFolderInDir(self.folderPath, "RUNDIR", True)
+        testDir = ""
         if(testDirData[0]):
             testDir = testDirData[1] + r"\datawork\SavedMessages"
 
