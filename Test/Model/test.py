@@ -20,7 +20,7 @@ class Test():
         self.name = os.path.basename(os.path.normpath(self.folderPath)) # the name of the test
         self.acceptedDbPath =  self.getAcceptedDbPath() # the fully qualified path of the accepted database
         self.testScript = self.getTestScript() # the fully qualified path of the test
-        self.testDbPath = "" # the fully qualified path of the test database
+        self.testDbPath = None # the fully qualified path of the test database
 
     #the run method runs the test and updates the generatedDbLocation
     def run(self):
@@ -46,9 +46,9 @@ class Test():
                 process = subprocess.Popen("%s %s" % (gitPath, self.testScript))
 
             else:  # otherwise can just call the script as a subpath
-                # TODO: TEST THIS CALL ON LINUX/MACOS
-                process = subprocess.call(self.testScript)
-            # TODO: ADD A TIMEOUT FOR DURATION OF UxAS TO EXECUTE. CURRENTLY USER NEEDS TO PRESS CTRL+C TO EXIT OR ADDED TO UxAS SCRIPT
+                dir = os.path.split(os.path.abspath(self.testScript))[0]
+                os.chdir(dir)
+                process = subprocess.Popen([self.testScript])
             process.wait()
 
     def assertMatchingCounts(self):
@@ -60,7 +60,7 @@ class Test():
             return
 
         self.updateGeneratedDbPath()
-        if (self.testDbPath == ""):
+        if (self.testDbPath == None):
             return
         truthDescriptorAndCounts = UxASDbHelper.getDescriptorAndCounts(self.acceptedDbPath)
         testDescriptorAndCounts = UxASDbHelper.getDescriptorAndCounts(self.testDbPath)
@@ -91,17 +91,16 @@ class Test():
         """
         #get the location of the generatedDb
         testDirData = FileHelper.searchForSubFolderInDir(self.folderPath, "RUNDIR", True)
+
         testDir = ""
+
         if(testDirData[0]):
-            testDir = testDirData[1] + r"\datawork\SavedMessages"
+            testDir = os.path.join(testDirData[1], *",datawork,SavedMessages,".split(','))
+            testPath = FileHelper.getMostRecentFileInPathWithExtension(testDir, ".db3")
+            #set the generatedDbLocation
+            if(testPath[0]):
+                self.testDbPath = testPath[1]
 
-        testPath = FileHelper.getMostRecentFileInPathWithExtension(testDir, ".db3")
-
-        #set the generatedDbLocation
-        if(testPath[0]):
-            self.testDbPath = testPath[1]
-        else:
-            self.testDbPath = None
 
     def getTestScript(self):
         """Searches for the test script and returns its value

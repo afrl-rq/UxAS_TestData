@@ -6,7 +6,7 @@ import os
 import getopt
 
 def main():
-    tests = getTestsRelativeToCurrentDirectory(r"..\Impact") #  generate tests based on impact folder
+    tests = getTestsRelativeToCurrentDirectory("..,Impact") #  generate tests based on impact folder
 
     try:
         opts, args = getopt.getopt(sys.argv[1:], "a", ["runall"])
@@ -27,7 +27,7 @@ def main():
 
 def getTestsRelativeToCurrentDirectory(relativePathString):
     currentDir = os.getcwd()
-    testsPath = os.path.abspath(os.path.join(currentDir, relativePathString))
+    testsPath = os.path.abspath(os.path.join(currentDir, *relativePathString.split(',')))
 
     subFolders = os.listdir(testsPath)
 

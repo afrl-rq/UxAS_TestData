@@ -14,7 +14,7 @@ class FileHelper():
             return (False, "No such file exists")
         fileDict = {}
         for file in files:
-            filePath = "%s\\%s" % (directory, file)
+            filePath = "%s%s%s" % (directory, os.path.sep, file)
             fileDict[FileHelper.getCreationDate(filePath)] = filePath
 
         return (True, fileDict[max(fileDict.keys())])
@@ -47,7 +47,7 @@ class FileHelper():
             for root, dirs, files in os.walk(directory):
                 for folder in dirs:
                     if folder.startswith(subFolder):
-                        return (True, directory + "\\" + folder)
+                        return (True, "%s%s%s" % (directory, os.path.sep, folder))
 
         return (False, "SubFolder does not exist")
 
@@ -66,6 +66,6 @@ class FileHelper():
             for root, dirs, files in os.walk(directory):
                 for file in files:
                     if file.startswith(fileHint):
-                        return (True, directory + "\\" + file)
+                        return (True, "%s%s%s" % (directory, os.path.sep, file))
 
         return (False, "File does not exist")

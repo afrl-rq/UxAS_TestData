@@ -1,8 +1,8 @@
-from enum import Enum, auto
+from enum import Enum
 
 # the execution status of a test
 class TestStatus(Enum):
-    Pending = auto() #using auto ensures unique int representation
-    Executing = auto()
-    Passed = auto()
-    Failed = auto()
+    Pending = 0
+    Executing = 1
+    Passed = 2
+    Failed = 3
