@@ -10,11 +10,13 @@ The following must be downloaded in order to run the message comparison applicat
 * A working version of [OpenUxAS](https://github.com/afrl-rq/OpenUxAS)
 * [Git Bash](https://git-scm.com/download/win) (for Windows users)
 
-To start the application, execute the main.py script. Since we are working with PyQt5, this is must be executed with the 32-bit version of Python.
+To start the application, execute the main.py script. Since we are working with PyQt5, this is must be executed with the 32-bit version of Python 3.
+
+If there are issues with the execution privileges or finding the UxAS test scripts, run the cleanScripts.sh script. This can be run by entering the Test directory and entering the following command in the terminal: 'bash cleanScripts.sh'
 
 #### Adding Tests ####
 
-Tests are located in the Impact folder of this repository. These tests are similar to UxAS scenarios, but have a few additional requirements: the accepted database, and a scenario run limit.
+Tests are located in the Impact folder of this repository. These tests are similar to UxAS scenarios, but have a few additional requirements: the accepted database, and a script that can execute a UxAS scenario. This script must use UxAS's run limit command line argument.
 
 ##### Configuring a Run Limit #####
 
