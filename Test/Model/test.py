@@ -4,7 +4,7 @@ import platform
 import subprocess
 
 from Model.Enums.testStatus import TestStatus
-from Services.fileHelper  import FileHelper
+from Services.fileHelper import FileHelper
 from Services.uxasDbHelper import UxASDbHelper
 
 
@@ -13,14 +13,15 @@ class Test():
     """The model for the tests.
     Contains the logic for test setup, verification, and execution
     """
-    def __init__(self, folderPath):
-        self.folderPath = folderPath # the test's folder path
+    def __init__(self, folderPath, blacklistMessageHints):
+        self.blacklistMessageHints = blacklistMessageHints
+        self.folderPath = folderPath  # the test's folder path
         self.description = "This test is still pending."
-        self.status = TestStatus.Pending # the current status of the test
-        self.name = os.path.basename(os.path.normpath(self.folderPath)) # the name of the test
-        self.acceptedDbPath =  self.getAcceptedDbPath() # the fully qualified path of the accepted database
-        self.testScript = self.getTestScript() # the fully qualified path of the test
-        self.testDbPath = None # the fully qualified path of the test database
+        self.status = TestStatus.Pending  # the current status of the test
+        self.name = os.path.basename(os.path.normpath(self.folderPath))  # the name of the test
+        self.acceptedDbPath = self.getAcceptedDbPath()  # the fully qualified path of the accepted database
+        self.testScript = self.getTestScript()  # the fully qualified path of the test
+        self.testDbPath = None  # the fully qualified path of the test database
 
     #the run method runs the test and updates the generatedDbLocation
     def run(self):
@@ -33,7 +34,6 @@ class Test():
         self.description = "This test is executing."
 
         if (self.isValidTest()):
-            process = subprocess
             if (platform.system() == 'Windows'):  # if on windows use git-bash to execute the shell script
                 # hopefully git is always saved in the same location on windows systems
                 user = getpass.getuser()
@@ -42,7 +42,6 @@ class Test():
                 dir = os.path.split(os.path.abspath(self.testScript))[0]
                 os.chdir(dir)
                 #start the subprocess
-                #process = subprocess.run("%s %s" % (gitPath, self.testScript))
                 process = subprocess.Popen("%s %s" % (gitPath, self.testScript))
 
             else:  # otherwise can just call the script as a subpath
@@ -62,9 +61,10 @@ class Test():
         self.updateGeneratedDbPath()
         if (self.testDbPath == None):
             return
+
         truthDescriptorAndCounts = UxASDbHelper.getDescriptorAndCounts(self.acceptedDbPath)
         testDescriptorAndCounts = UxASDbHelper.getDescriptorAndCounts(self.testDbPath)
-        testData = UxASDbHelper.compareDescriptorAndCounts(truthDescriptorAndCounts, testDescriptorAndCounts, self.name)
+        testData = UxASDbHelper.compareDescriptorAndCounts(truthDescriptorAndCounts, testDescriptorAndCounts, self.name, self.blacklistMessageHints)
 
         # update the test status
         if (testData[0]):
@@ -74,10 +74,7 @@ class Test():
         #update the description
         self.description = testData[1]
 
-    def isValidTest(self): # this should be checked before running a test. Could show test in testExplorer even if is not valid. Should have warning test status selector
-        #for the test to be valid, there must be two files located in the folder...:
-            #  there is an acceptedDb
-            #  there is a runUxAS script
+    def isValidTest(self):
         """Checks if the test is valid (contains an actual database and has a script to run the test)
         :return: Boolean - true if both the accepted database and test script are set, false either is not set.
         """
@@ -91,8 +88,6 @@ class Test():
         """
         #get the location of the generatedDb
         testDirData = FileHelper.searchForSubFolderInDir(self.folderPath, "RUNDIR", True)
-
-        testDir = ""
 
         if(testDirData[0]):
             testDir = os.path.join(testDirData[1], *",datawork,SavedMessages,".split(','))
@@ -126,7 +121,6 @@ class Test():
         """ Returns a HTML representation of the test based on the name of the test, status of the test, and description of the test.
         :return: String - HTML format
         """
-        htmlDescription = self.description.replace("\n","<br/>")
 
         return "<h1><b>{}</b></h1>" \
                "<h3>Status: {}</h3>" \

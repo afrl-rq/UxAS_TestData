@@ -16,7 +16,6 @@ class FileHelper():
         for file in files:
             filePath = "%s%s%s" % (directory, os.path.sep, file)
             fileDict[FileHelper.getCreationDate(filePath)] = filePath
-
         return (True, fileDict[max(fileDict.keys())])
 
     def getCreationDate(pathToFile):
@@ -58,8 +57,8 @@ class FileHelper():
         :param isFileHint: A boolean that identifies whether the file represents the beginning of the file's name or not. If true, then the file parameter is a hint that represents the beginning of the file's name. If false, then it represents the full file's name
         """
         # check if file exists in the specified directory
-        if (isFileHint == False and os.path.isdir(directory + file)):
-            return (True, directory + file)
+        if (isFileHint == False and os.path.isdir(directory + fileHint)):
+            return (True, directory + fileHint)
         # if isSubFolderHint is true then the subfolder has to begin with subFolder name
 
         if (isFileHint == True):
@@ -69,3 +68,4 @@ class FileHelper():
                         return (True, "%s%s%s" % (directory, os.path.sep, file))
 
         return (False, "File does not exist")
+

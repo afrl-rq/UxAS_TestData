@@ -1,6 +1,6 @@
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
-from Views.testStatusSelector import StatusView
+from Views.statusView import StatusView
 
 #will be used to populate the list view in the TestExplorer (list of Test)
 class ItemListModel(QAbstractListModel):

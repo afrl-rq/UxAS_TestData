@@ -3,10 +3,15 @@ from Model.test import Test  # the test class (used to initialize the test explo
 from PyQt5.QtWidgets import *  # this module contains classes that provide a set of UI elements to create classic desktop-style user interfaces
 import sys
 import os
+import re
 import getopt
 
 def main():
-    tests = getTestsRelativeToCurrentDirectory("..,Impact") #  generate tests based on impact folder
+    currentDir = os.getcwd()
+    blacklistPath = "%s%s%s" % (currentDir, os.path.sep, "MessageBlacklist.txt")
+    blacklist = parseBlacklistFile(blacklistPath)
+    tests = getTestsRelativeToDirectory(currentDir, "..,Impact", blacklist) #  generate tests based on impact folder
+
 
     try:
         opts, args = getopt.getopt(sys.argv[1:], "a", ["runall"])
@@ -25,9 +30,9 @@ def main():
     testExplorer.show() #  show the test explorer
     app.exec_() #  execute the application
 
-def getTestsRelativeToCurrentDirectory(relativePathString):
-    currentDir = os.getcwd()
-    testsPath = os.path.abspath(os.path.join(currentDir, *relativePathString.split(',')))
+def getTestsRelativeToDirectory(directory, relativePathString, blacklist):
+
+    testsPath = os.path.abspath(os.path.join(directory, *relativePathString.split(',')))
 
     subFolders = os.listdir(testsPath)
 
@@ -37,9 +42,25 @@ def getTestsRelativeToCurrentDirectory(relativePathString):
 
     testDirs = [os.path.abspath(os.path.join(testsPath, folder)) for folder in subFolders]
     # generate all the tests
-    tests = [Test(testDir) for testDir in testDirs]
+    tests = [Test(testDir, blacklist) for testDir in testDirs]
 
     return tests
+
+def parseBlacklistFile( fullyQualifiedPath ):
+    #read file
+    blacklistFile = open(fullyQualifiedPath, 'r')
+    contents = blacklistFile.read()
+    # remove any unnecessary characters
+    charsToRemove = [' ', '\n', '\r', '\t']
+    # a regular expression to search for characters in remove characters list
+    regEx = "[" + re.escape(''.join(charsToRemove)) + ']'
+    #substitute the found items with an empty character in the contents
+    contents = re.sub(regEx,'',contents)
+    #[contents.replace(char, '') for char in removeChars]
+    #split the contents by commas
+    blacklistMessageHints = contents.split(",")
+    #return list of blacklist messages
+    return blacklistMessageHints
 
 if __name__ == '__main__':
     main()

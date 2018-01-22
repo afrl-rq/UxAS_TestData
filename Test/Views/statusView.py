@@ -30,9 +30,6 @@ class StatusView(QDialog):
         self.webView = QWebEngineView()
         self.webView.setHtml("<h1>Executing Test(s)...</h1>")
 
-        #try resizing the webView... Not sure why this doesnt work
-        self.webView.resize(100,100)
-
         self.checkThreadTimer = QTimer(self)
         self.checkThreadTimer.setInterval(500)  #interval to run the tests, then check if they passed
         self.checkThreadTimer.timeout.connect(self.runTests)

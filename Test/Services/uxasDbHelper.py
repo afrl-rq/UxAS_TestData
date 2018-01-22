@@ -17,32 +17,58 @@ class UxASDbHelper():
         conn.close()
         return descriptorsAndCounts
 
+    def compareDescriptorAndCountsOneWay(descriptorAndCounts1, descriptorAndCounts2 ,blacklistItems=[]):
 
-    def compareDescriptorAndCounts(truthDescriptorAndCounts, testDescriptorAndCounts, testName=""):
+        unmatchedMessageKeys = []
+        skippedMessageKeys = []
+        for key in descriptorAndCounts1.keys():
+            # Check all messages in the blacklist here:
+            continueCheck = False
+
+            # Loop to get all messages that are skipped
+            for item in blacklistItems:
+                if (item.lower() in key.lower()):
+                    continueCheck = True  # the message will not be compared in databases
+                    skippedMessageKeys.append(key)
+
+            if (continueCheck):  # if the message type is skipped, then continue and do not compare the counts
+                continue
+
+            if (descriptorAndCounts1[key] != descriptorAndCounts2.get(key, 0)):  # Check if truth and test message counts match
+                unmatchedMessageKeys.append(key)
+
+        skippedAndUnmatchedMessageKeyTuple = (skippedMessageKeys, unmatchedMessageKeys)
+        return skippedAndUnmatchedMessageKeyTuple
+
+
+
+    def compareDescriptorAndCounts(truthDescriptorAndCounts, testDescriptorAndCounts, testName="", blacklistItems = []):
         """Compares the counts of each type of message in the test database to the truth database.
         :param truthDescriptorAndCounts: A dictionary of the messages sent where the key is the message descriptor and the value is the number of that type of message sent. This is the dbFile that the output from the most recent run is compared to.
         :param testDescriptorAndCounts:  A dictionary of the messages sent where the key is the message descriptor and the value is the number of that type of message sent. This is the dbFile that was output from the most recent run.
         """""
-        #SHOULD THIS RETURN (BOOL - Whether or not the test passed, String - Description of the tests (failed message descripion and passed) )
-
         doMessageCountsMatch = True
-        failedMessages = []
-        for key in truthDescriptorAndCounts.keys():
-            if (truthDescriptorAndCounts[key] != testDescriptorAndCounts.get(key, 0)):  # testDescriptorAndCounts.get used in case key doesnt exist in dict
-                doMessageCountsMatch = False
-                failedMessages.append("ERROR:\n\tThe count for the message \"%s\" does not match in the log files.\n\tExpected Count: %s\n\tActual Count: %s" % (
-                    key, truthDescriptorAndCounts[key], testDescriptorAndCounts.get(key, 0)))
+        warningMessageString = str()
+        (skippedMessageKeys1, unmatchedMessageKeys1) = UxASDbHelper.compareDescriptorAndCountsOneWay(truthDescriptorAndCounts, testDescriptorAndCounts, blacklistItems)
+        (skippedMessageKeys2, unmatchedMessageKeys2) = UxASDbHelper.compareDescriptorAndCountsOneWay(testDescriptorAndCounts, truthDescriptorAndCounts, blacklistItems)
+        skippedMessageKeys = set(skippedMessageKeys1 + skippedMessageKeys2)
+        unmatchedMessageKeys = set(unmatchedMessageKeys1 + unmatchedMessageKeys2)
 
-        if (doMessageCountsMatch):
-            print(testName + "\nPASSED:\n\tAll message counts match in the log files\n")
-            return (doMessageCountsMatch, "All message counts matched in the expected and actual message databases")
+        if(skippedMessageKeys):
+            skippedMessages = ["Not comparing the \"%s\" messages" % key for key in skippedMessageKeys]
+            warningMessageString = "\tWARNING:\n\t\t" + "\n\t\t".join(skippedMessages)
+        if(unmatchedMessageKeys):
+            doMessageCountsMatch = False
+            unmatchedMessages= ["\n\tThe count for the message \"%s\" does not match in the log files.\n\tExpected Count: %s\n\tActual Count: %s" % (key, truthDescriptorAndCounts.get(key, 0), testDescriptorAndCounts.get(key, 0)) for key in unmatchedMessageKeys]
+            print("%s\nFAILED\n\tThe message counts do not match in the log files" % testName)
+            [print("\tWARNING: %s messages" % message) for message in skippedMessages]
+            [print("\tERROR: " + message) for message in unmatchedMessages]
+            errorMessageString = "\n\tERROR:\n\t" + "\n\t\t".join(unmatchedMessages)
+            descriptionMessage = warningMessageString + errorMessageString
         else:
-            print(testName + "\nFAILED:\n\tThe message counts do not match in the log files")
-            failedMessagesString = str()
+            print("%s\nPASSED:\n\tAll message counts match in the log files\n" % testName)
+            descriptionMessage = warningMessageString
+            print(descriptionMessage)
+            descriptionMessage = warningMessageString
 
-            # add messages to a failed messages string that will be passed as the test description
-            for message in failedMessages:
-                failedMessagesString = failedMessagesString + message + "\n"
-            #can uncomment the following line for debugging, will be used in UI
-            [ print(message) for message in failedMessages ] # print all the messages that failed
-            return (doMessageCountsMatch, failedMessagesString)
+        return (doMessageCountsMatch, descriptionMessage)
