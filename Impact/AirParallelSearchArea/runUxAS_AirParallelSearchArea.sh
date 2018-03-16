@@ -11,4 +11,4 @@ mkdir -p RUNDIR_AirParallelSearchArea
 cd RUNDIR_AirParallelSearchArea
 $RM_DATAWORK
 $RM_LOG
-$BIN -cfgPath ../cfg_AirParallelSearchArea.xml
+$BIN -cfgPath ../cfg_AirParallelSearchArea.xml -runUntil 5

@@ -11,4 +11,4 @@ mkdir -p RUNDIR_BeyondCommAir
 cd RUNDIR_BeyondCommAir
 $RM_DATAWORK
 $RM_LOG
-$BIN -cfgPath ../cfg_BeyondCommAir.xml
+$BIN -cfgPath ../cfg_BeyondCommAir.xml -runUntil 5

@@ -11,4 +11,4 @@ mkdir -p RUNDIR_AirSearchPoint
 cd RUNDIR_AirSearchPoint
 $RM_DATAWORK
 $RM_LOG
-$BIN -cfgPath ../cfg_AirSearchPoint.xml
+$BIN -cfgPath ../cfg_AirSearchPoint.xml -runUntil 5

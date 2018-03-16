@@ -11,4 +11,4 @@ mkdir -p RUNDIR_SurfaceInspectRoute
 cd RUNDIR_SurfaceInspectRoute
 $RM_DATAWORK
 $RM_LOG
-$BIN -cfgPath ../cfg_SurfaceInspectRoute.xml
+$BIN -cfgPath ../cfg_SurfaceInspectRoute.xml -runUntil 5
