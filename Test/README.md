@@ -6,13 +6,13 @@ The following must be downloaded in order to run the message comparison applicat
 
 * [Python & pip](https://www.python.org/ftp/python/3.6.1/python-3.6.1.exe)
 * PyQt5
-  * On a Windows machine: this can be installed with the command prompt using the 'pip install PyQt5' command.
-  * On a Linux machine: this can be installed through the terminal with the 'pip3 install PyQt5' command.
+  * On a Windows machine: this can be installed with the command prompt using the 'pip install PyQt5==5.10' command.
+  * On a Linux machine: this can be installed through the terminal with the 'pip3 install PyQt5==5.10' command.
   * Note: PyQt5 is not compatible with python versions preceding Python 3.5
 * A working version of [OpenUxAS](https://github.com/afrl-rq/OpenUxAS)
 * [Git Bash](https://git-scm.com/download/win) (for Windows users)
 
-To start the application, execute the main.py script. Since we are working with PyQt5, this is must be executed with the 32-bit version of Python 3.
+To start the application, execute the main.py script. 
 
 If there are issues with the execution privileges or finding the UxAS test scripts, run the cleanScripts.sh script. This can be run by entering the Test directory and entering the following command in the terminal: 'bash cleanScripts.sh'
 
