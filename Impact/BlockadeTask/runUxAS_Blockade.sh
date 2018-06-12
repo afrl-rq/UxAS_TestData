@@ -11,4 +11,4 @@ mkdir -p RUNDIR_Blockade
 cd RUNDIR_Blockade
 $RM_DATAWORK
 $RM_LOG
-$BIN -cfgPath ../cfg_Blockade.xml
+$BIN -cfgPath ../cfg_Blockade.xml -runUntil 5

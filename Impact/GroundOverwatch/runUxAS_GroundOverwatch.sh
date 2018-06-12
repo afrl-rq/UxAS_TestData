@@ -11,4 +11,4 @@ mkdir -p RUNDIR_GroundOverwatch
 cd RUNDIR_GroundOverwatch
 $RM_DATAWORK
 $RM_LOG
-$BIN -cfgPath ../cfg_GroundOverwatch.xml
+$BIN -cfgPath ../cfg_GroundOverwatch.xml -runUntil 5
